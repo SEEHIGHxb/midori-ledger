@@ -79,6 +79,9 @@ function renderAllViews() {
  */
 function setupNavigation() {
   const links = document.querySelectorAll('.nav-link');
+  const asideElement = document.querySelector('aside');
+  const sidebarOverlay = document.getElementById('sidebarOverlay');
+
   links.forEach(link => {
     link.addEventListener('click', (e) => {
       e.preventDefault();
@@ -96,12 +99,41 @@ function setupNavigation() {
       
       activeTab = target;
       
+      // Close mobile navigation drawer if open
+      if (asideElement) asideElement.classList.remove('active');
+      if (sidebarOverlay) sidebarOverlay.classList.remove('active');
+      
       // Trigger chart refresh if returning to dashboard
       if (target === 'dashboard') {
         setTimeout(updateCharts, 50);
       }
     });
   });
+
+  // Mobile Sidebar Toggle Triggers
+  const mobileToggle = document.getElementById('mobileMenuToggle');
+  const mobileClose = document.getElementById('mobileMenuClose');
+
+  if (mobileToggle && asideElement && sidebarOverlay) {
+    mobileToggle.addEventListener('click', () => {
+      asideElement.classList.add('active');
+      sidebarOverlay.classList.add('active');
+    });
+  }
+
+  if (mobileClose && asideElement && sidebarOverlay) {
+    mobileClose.addEventListener('click', () => {
+      asideElement.classList.remove('active');
+      sidebarOverlay.classList.remove('active');
+    });
+  }
+
+  if (sidebarOverlay && asideElement) {
+    sidebarOverlay.addEventListener('click', () => {
+      asideElement.classList.remove('active');
+      sidebarOverlay.classList.remove('active');
+    });
+  }
 
   // Theme switch click
   document.getElementById('themeToggleBtn').addEventListener('click', () => {

@@ -1178,3 +1178,128 @@ body.light-theme .date-badge {
   from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
 }
+
+/* ==========================================================================
+   Favicon & Responsive Mobile Sidebar Overlay & Collapsible Controls
+   ========================================================================== */
+.mobile-menu-btn {
+  display: none;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  color: var(--text-main);
+  padding: 10px;
+  border-radius: 12px;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 10px var(--shadow-color);
+  transition: all 0.25s ease;
+}
+
+.mobile-menu-btn:hover {
+  border-color: var(--green-matcha);
+  background: rgba(77, 156, 78, 0.1);
+}
+
+.mobile-menu-close {
+  display: none;
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 8px;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.mobile-menu-close:hover {
+  color: var(--autumn-terracotta);
+  background: rgba(224, 122, 95, 0.15);
+}
+
+.sidebar-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(14, 18, 14, 0.55);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  z-index: 999;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.sidebar-overlay.active {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.header-title-section {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+/* Responsive Media Queries for Mobile Screens */
+@media (max-width: 768px) {
+  aside {
+    position: fixed;
+    top: 0;
+    left: -280px;
+    height: 100vh;
+    z-index: 1000;
+    transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: none;
+  }
+  
+  aside.active {
+    left: 0;
+    box-shadow: 0 0 35px rgba(0, 0, 0, 0.6);
+  }
+  
+  .mobile-menu-btn {
+    display: flex;
+  }
+  
+  .mobile-menu-close {
+    display: flex;
+  }
+  
+  main {
+    padding: 24px 16px;
+    gap: 20px;
+  }
+  
+  header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+  
+  .header-controls {
+    width: 100%;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  
+  .time-travel-widget, .currency-selector-widget {
+    flex: 1;
+    min-width: 150px;
+    justify-content: center;
+  }
+  
+  .header-title-section h1 {
+    font-size: 26px;
+  }
+  
+  .header-title-section p {
+    font-size: 12px;
+  }
+}
+
