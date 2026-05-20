@@ -419,7 +419,9 @@ function recalculateWalletBalances() {
     wallet.balance = Number(wallet.openingBalance) || 0;
   });
 
-  const sorted = [...MidoriState.transactions].sort((a, b) => new Date(a.date) - new Date(b.date));
+  const sorted = [...MidoriState.transactions]
+    .filter(tx => tx.date <= MidoriState.virtualDate)
+    .sort((a, b) => new Date(a.date) - new Date(b.date));
   
   sorted.forEach(tx => {
     const wallet = MidoriState.wallets.find(w => w.id === tx.walletId);
@@ -493,37 +495,14 @@ function addTransaction(tx) {
   tx.amount = Number(tx.amount);
   tx.date = tx.date || MidoriState.virtualDate;
   MidoriState.transactions.push(tx);
-  
-  const wallet = MidoriState.wallets.find(w => w.id === tx.walletId);
-  if (wallet) {
-    const txCurrency = tx.currency || wallet.currency;
-    const amountInWalletCurrency = convertAmount(tx.amount, txCurrency, wallet.currency);
-    if (tx.type === 'income') {
-      wallet.balance += amountInWalletCurrency;
-    } else {
-      wallet.balance -= amountInWalletCurrency;
-    }
-  }
-  
-  saveState();
+  recalculateWalletBalances();
 }
 
 function deleteTransaction(txId) {
   const txIndex = MidoriState.transactions.findIndex(t => t.id === txId);
   if (txIndex !== -1) {
-    const tx = MidoriState.transactions[txIndex];
-    const wallet = MidoriState.wallets.find(w => w.id === tx.walletId);
-    if (wallet) {
-      const txCurrency = tx.currency || wallet.currency;
-      const amountInWalletCurrency = convertAmount(tx.amount, txCurrency, wallet.currency);
-      if (tx.type === 'income') {
-        wallet.balance -= amountInWalletCurrency;
-      } else {
-        wallet.balance += amountInWalletCurrency;
-      }
-    }
     MidoriState.transactions.splice(txIndex, 1);
-    saveState();
+    recalculateWalletBalances();
   }
 }
 

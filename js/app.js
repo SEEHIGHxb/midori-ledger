@@ -14,7 +14,12 @@ function formatDisplayDate(dateStr) {
   if (!dateStr) return '';
   const parts = dateStr.split('-');
   if (parts.length !== 3) return dateStr;
-  return `${parts[2]}-${parts[1]}-${parts[0]}`; // DD-MM-YYYY
+  const day = parts[2];
+  const monthNum = parseInt(parts[1], 10);
+  const year = parts[0];
+  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  const monthName = months[monthNum - 1] || parts[1];
+  return `${day} ${monthName} ${year}`; // e.g. 20 May 2026
 }
 
 // On page load initialization
@@ -715,6 +720,10 @@ function renderSchedules() {
     const formattedAmount = formatCurrency(sched.amount, currency);
     const isIncome = sched.type === 'income';
 
+    const isExpired = sched.endDate && (sched.nextDueDate > sched.endDate);
+    const nextOccurrenceText = isExpired ? '<span style="color:var(--autumn-terracotta);">Ended (Expired)</span>' : formatDisplayDate(sched.nextDueDate);
+    const endDateText = sched.endDate ? ` • Ends: ${formatDisplayDate(sched.endDate)}` : '';
+
     const itemHTML = `
       <div class="schedule-item" style="border-left: 4px solid ${sched.active ? 'var(--green-matcha)' : 'var(--border-color)'};">
         <div class="schedule-meta">
@@ -725,7 +734,7 @@ function renderSchedules() {
               Pay Wallet: <b>${walletName}</b> • Tag: <b>${catName}</b>
             </span>
             <span class="sched-sub" style="font-size:10px; margin-top:2px;">
-              Started: ${formatDisplayDate(sched.startDate)} • <b>Next Auto-Occurrence: ${formatDisplayDate(sched.nextDueDate)}</b>
+              Started: ${formatDisplayDate(sched.startDate)}${endDateText} • <b>Next Auto-Occurrence: ${nextOccurrenceText}</b>
             </span>
           </div>
         </div>
@@ -734,7 +743,7 @@ function renderSchedules() {
             ${isIncome ? '+' : '-'}${formattedAmount}
           </span>
           <div style="display:flex; align-items:center; gap:8px;">
-            <button class="btn-secondary" onclick="toggleScheduleActive('${sched.id}')" style="padding:6px 12px; font-size:12px;">
+            <button class="btn-secondary" onclick="toggleScheduleActive('${sched.id}')" style="padding:6px 12px; font-size:12px;" ${isExpired ? 'disabled style="opacity:0.5; cursor:not-allowed;"' : ''}>
               ${sched.active ? 'Pause' : 'Resume'}
             </button>
             <button class="btn-secondary" onclick="openEditScheduleModal('${sched.id}')" title="Edit Schedule" style="padding:6px; display:inline-flex; align-items:center; justify-content:center;">
@@ -1120,6 +1129,7 @@ function openEditScheduleModal(schedId) {
   document.getElementById('editSchedType').value = sched.type;
   document.getElementById('editSchedFrequency').value = sched.frequency;
   document.getElementById('editSchedStartDate').value = sched.startDate;
+  document.getElementById('editSchedEndDate').value = sched.endDate || '';
 
   // Populate wallets dropdown
   const editSchedWallet = document.getElementById('editSchedWallet');
@@ -1160,7 +1170,8 @@ function submitEditScheduleForm(e) {
     categoryId: document.getElementById('editSchedCategory').value,
     frequency: document.getElementById('editSchedFrequency').value,
     startDate: document.getElementById('editSchedStartDate').value,
-    nextDueDate: document.getElementById('editSchedStartDate').value
+    nextDueDate: document.getElementById('editSchedStartDate').value,
+    endDate: document.getElementById('editSchedEndDate').value || null
   };
 
   updateSchedule(id, updatedFields);
@@ -1195,7 +1206,8 @@ function submitScheduleForm(e) {
     categoryId: document.getElementById('schedCategory').value,
     frequency: document.getElementById('schedFrequency').value,
     startDate: document.getElementById('schedStartDate').value,
-    nextDueDate: document.getElementById('schedStartDate').value
+    nextDueDate: document.getElementById('schedStartDate').value,
+    endDate: document.getElementById('schedEndDate').value || null
   };
 
   addSchedule(schedule);
@@ -1219,8 +1231,8 @@ function triggerMonthTravel(months) {
   current.setMonth(current.getMonth() + months);
   const newDateStr = current.toISOString().split('T')[0];
   MidoriState.virtualDate = newDateStr;
-  saveState();
   processSchedules(newDateStr);
+  recalculateWalletBalances();
 }
 
 function triggerYearTravel(years) {
@@ -1228,15 +1240,15 @@ function triggerYearTravel(years) {
   current.setFullYear(current.getFullYear() + years);
   const newDateStr = current.toISOString().split('T')[0];
   MidoriState.virtualDate = newDateStr;
-  saveState();
   processSchedules(newDateStr);
+  recalculateWalletBalances();
 }
 
 function resetToCurrentDate() {
   const baseDateStr = '2026-05-20';
   MidoriState.virtualDate = baseDateStr;
-  saveState();
   processSchedules(baseDateStr);
+  recalculateWalletBalances();
 }
 
 function changeBaseCurrency(newCurr) {

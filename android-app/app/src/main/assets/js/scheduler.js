@@ -32,6 +32,12 @@ function processSchedules(targetDateStr) {
     let nextDue = schedule.nextDueDate;
     // Process all occurrences until nextDue is strictly after the targetDateStr
     while (nextDue <= targetDateStr) {
+      if (schedule.endDate && nextDue > schedule.endDate) {
+        schedule.active = false;
+        stateChanged = true;
+        break;
+      }
+
       console.log(`Processing schedule "${schedule.title}" due on ${nextDue}`);
       
       // 1. Create a transaction instance (uses schedule.currency if defined, otherwise defaults to wallet currency)
@@ -53,16 +59,6 @@ function processSchedules(targetDateStr) {
       newTx.id = generateUUID();
       MidoriState.transactions.push(newTx);
       
-      // Update wallet balance directly, converting if currency differs
-      if (wallet) {
-        const amountInWalletCurrency = convertAmount(newTx.amount, newTx.currency, wallet.currency);
-        if (schedule.type === 'income') {
-          wallet.balance += amountInWalletCurrency;
-        } else {
-          wallet.balance -= amountInWalletCurrency;
-        }
-      }
-      
       // 2. Advance schedule nextDueDate
       nextDue = getNextOccurrenceDate(nextDue, schedule.frequency);
       schedule.nextDueDate = nextDue;
@@ -72,7 +68,7 @@ function processSchedules(targetDateStr) {
   });
 
   if (stateChanged) {
-    saveState();
+    recalculateWalletBalances();
   }
 }
 
@@ -120,6 +116,10 @@ function get30DayForecast() {
     const schedCurrency = schedule.currency || (baseWallet ? baseWallet.currency : MidoriState.preferences.baseCurrency);
     
     while (checkDate <= endLimitStr) {
+      if (schedule.endDate && checkDate > schedule.endDate) {
+        break;
+      }
+
       // Convert schedule amount to standard base currency
       const amountInBase = convertAmount(schedule.amount, schedCurrency, MidoriState.preferences.baseCurrency);
       

@@ -120,7 +120,7 @@
           <div class="time-travel-widget">
             <span class="date-badge">
               <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2.5" fill="none"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
-              <span id="virtualDateDisplay">20-05-2026</span>
+              <span id="virtualDateDisplay">20 May 2026</span>
             </span>
             <button class="time-travel-btn" id="timeTravelBtnPrevYear" onclick="triggerYearTravel(-1)">-1 Year</button>
             <button class="time-travel-btn" id="timeTravelBtnPrevMonth" onclick="triggerMonthTravel(-1)">-1 Month</button>
@@ -548,6 +548,12 @@
             <div class="color-option" style="background: #a2a86c;" data-color="#a2a86c"></div>
             <div class="color-option" style="background: #5e665c;" data-color="#5e665c"></div>
             <div class="color-option" style="background: #cfa87b;" data-color="#cfa87b"></div>
+            <div class="color-option" style="background: #e5989b;" data-color="#e5989b"></div>
+            <div class="color-option" style="background: #d06a4c;" data-color="#d06a4c"></div>
+            <div class="color-option" style="background: #6d597a;" data-color="#6d597a"></div>
+            <div class="color-option" style="background: #355070;" data-color="#355070"></div>
+            <div class="color-option" style="background: #e09f53;" data-color="#e09f53"></div>
+            <div class="color-option" style="background: #31572c;" data-color="#31572c"></div>
           </div>
         </div>
 
@@ -611,6 +617,12 @@
             <div class="color-option" style="background: #a2a86c;" data-color="#a2a86c"></div>
             <div class="color-option" style="background: #5e665c;" data-color="#5e665c"></div>
             <div class="color-option" style="background: #cfa87b;" data-color="#cfa87b"></div>
+            <div class="color-option" style="background: #e5989b;" data-color="#e5989b"></div>
+            <div class="color-option" style="background: #d06a4c;" data-color="#d06a4c"></div>
+            <div class="color-option" style="background: #6d597a;" data-color="#6d597a"></div>
+            <div class="color-option" style="background: #355070;" data-color="#355070"></div>
+            <div class="color-option" style="background: #e09f53;" data-color="#e09f53"></div>
+            <div class="color-option" style="background: #31572c;" data-color="#31572c"></div>
           </div>
         </div>
 
@@ -674,6 +686,12 @@
             <div class="color-option" style="background: #aabfa9;" data-color="#aabfa9"></div>
             <div class="color-option" style="background: #a2a86c;" data-color="#a2a86c"></div>
             <div class="color-option" style="background: #5e665c;" data-color="#5e665c"></div>
+            <div class="color-option" style="background: #e5989b;" data-color="#e5989b"></div>
+            <div class="color-option" style="background: #d06a4c;" data-color="#d06a4c"></div>
+            <div class="color-option" style="background: #6d597a;" data-color="#6d597a"></div>
+            <div class="color-option" style="background: #355070;" data-color="#355070"></div>
+            <div class="color-option" style="background: #e09f53;" data-color="#e09f53"></div>
+            <div class="color-option" style="background: #31572c;" data-color="#31572c"></div>
           </div>
         </div>
 
@@ -744,6 +762,13 @@
           </div>
         </div>
 
+        <div class="form-row">
+          <div class="input-group">
+            <label for="schedEndDate">End Occurrence Date <span style="font-size:10px; font-weight:400; color:var(--text-muted);">(Optional)</span></label>
+            <input type="date" id="schedEndDate" class="form-control">
+          </div>
+        </div>
+
         <button type="submit" class="form-submit-btn">Initiate Recurring Schedule</button>
       </form>
     </div>
@@ -804,6 +829,12 @@
             <div class="color-option" style="background: #aabfa9;" data-color="#aabfa9"></div>
             <div class="color-option" style="background: #a2a86c;" data-color="#a2a86c"></div>
             <div class="color-option" style="background: #5e665c;" data-color="#5e665c"></div>
+            <div class="color-option" style="background: #e5989b;" data-color="#e5989b"></div>
+            <div class="color-option" style="background: #d06a4c;" data-color="#d06a4c"></div>
+            <div class="color-option" style="background: #6d597a;" data-color="#6d597a"></div>
+            <div class="color-option" style="background: #355070;" data-color="#355070"></div>
+            <div class="color-option" style="background: #e09f53;" data-color="#e09f53"></div>
+            <div class="color-option" style="background: #31572c;" data-color="#31572c"></div>
           </div>
         </div>
 
@@ -951,6 +982,13 @@
           <div class="input-group">
             <label for="editSchedStartDate">First Occurrence Date</label>
             <input type="date" id="editSchedStartDate" class="form-control" required>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="input-group">
+            <label for="editSchedEndDate">End Occurrence Date <span style="font-size:10px; font-weight:400; color:var(--text-muted);">(Optional)</span></label>
+            <input type="date" id="editSchedEndDate" class="form-control">
           </div>
         </div>
 
