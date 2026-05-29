@@ -1,7 +1,7 @@
 {
-  "name": "Midori Finance Ledger",
+  "name": "Midori — Leafy Ledger",
   "short_name": "Midori",
-  "description": "Elegant, multi-currency ledger with Japanese-inspired minimalist aesthetics.",
+  "description": "Midori - elegant PWA accounting with Leafy Ledger multi-currency sync.",
   "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#2d5a27",

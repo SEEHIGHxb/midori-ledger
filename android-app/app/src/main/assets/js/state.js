@@ -517,6 +517,7 @@ function recalculateWalletBalances() {
     .sort((a, b) => new Date(a.date) - new Date(b.date));
   
   sorted.forEach(tx => {
+    // 1. Process From Wallet (deduction for 'expense' and 'transfer', addition for 'income')
     const wallet = MidoriState.wallets.find(w => w.id === tx.walletId);
     if (wallet) {
       const txCurrency = tx.currency || wallet.currency;
@@ -525,6 +526,16 @@ function recalculateWalletBalances() {
         wallet.balance += amountInWalletCurrency;
       } else {
         wallet.balance -= amountInWalletCurrency;
+      }
+    }
+
+    // 2. Process To Wallet (addition only for 'transfer')
+    if (tx.type === 'transfer' && tx.toWalletId) {
+      const toWallet = MidoriState.wallets.find(w => w.id === tx.toWalletId);
+      if (toWallet) {
+        const txCurrency = tx.currency || toWallet.currency;
+        const amountInToWalletCurrency = convertAmount(tx.amount, txCurrency, toWallet.currency);
+        toWallet.balance += amountInToWalletCurrency;
       }
     }
   });

@@ -261,7 +261,7 @@ function renderDashboardMetrics() {
 
       if (tx.type === 'income') {
         monthlyIncome += converted;
-      } else {
+      } else if (tx.type === 'expense') {
         monthlyExpense += converted;
       }
     }
@@ -746,17 +746,67 @@ function renderLedger() {
 
   filtered.forEach(tx => {
     const wallet = MidoriState.wallets.find(w => w.id === tx.walletId);
+    const toWallet = tx.toWalletId ? MidoriState.wallets.find(w => w.id === tx.toWalletId) : null;
     const category = MidoriState.categories.find(c => c.id === tx.categoryId);
 
     const walletName = wallet ? wallet.name : 'Unknown Wallet';
     const walletCurrency = wallet ? wallet.currency : 'USD';
+    const toWalletName = toWallet ? toWallet.name : 'Unknown Wallet';
     const catName = category ? category.name : 'Uncategorized';
     const catColor = category ? category.color : '#8ba88f';
     const catIcon = category ? category.icon : 'leaf';
     const catIconSvg = SVG_ICONS[catIcon] || SVG_ICONS.leaf;
 
     const formattedAmount = formatCurrency(tx.amount, tx.currency || walletCurrency);
-    const isIncome = tx.type === 'income';
+    
+    let categoryHTML = '';
+    let walletHTML = '';
+    let amountHTML = '';
+
+    if (tx.type === 'transfer') {
+      categoryHTML = `
+        <span class="badge-tag" style="background: rgba(255,255,255,0.02); border: 1px dashed var(--border-color);">
+          <span style="display:inline-flex; width:14px; height:14px; color:var(--green-mint);">
+            <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" stroke-width="2.5" fill="none"><path d="M17 1l4 4-4 4M21 5H9a5 5 0 0 0-5 5v3m7 10l-4-4 4-4M3 19h12a5 5 0 0 0 5-5v-3"/></svg>
+          </span>
+          <span>Transfer</span>
+        </span>
+      `;
+      walletHTML = `
+        <div style="display:flex; align-items:center; flex-wrap:wrap; gap:4px;">
+          <span class="badge-wallet" style="border-left: 3px solid ${wallet ? wallet.color : 'transparent'};">
+            ${walletName}
+          </span>
+          <span style="opacity: 0.5; font-size:10px;">➔</span>
+          <span class="badge-wallet" style="border-left: 3px solid ${toWallet ? toWallet.color : 'transparent'};">
+            ${toWalletName}
+          </span>
+        </div>
+      `;
+      amountHTML = `
+        <td class="tx-amount-cell" style="color: var(--text-muted); font-weight: 500; font-family:'Outfit'; text-align:right;">
+          ➔ ${formattedAmount}
+        </td>
+      `;
+    } else {
+      const isIncome = tx.type === 'income';
+      categoryHTML = `
+        <span class="badge-tag">
+          <span style="display:inline-flex; width:14px; height:14px; color:${catColor};">${catIconSvg}</span>
+          <span>${catName}</span>
+        </span>
+      `;
+      walletHTML = `
+        <span class="badge-wallet" style="border-left: 3px solid ${wallet ? wallet.color : 'transparent'};">
+          ${walletName} <span style="font-size:9px; opacity:0.6; margin-left:4px;">${walletCurrency}</span>
+        </span>
+      `;
+      amountHTML = `
+        <td class="tx-amount-cell ${isIncome ? 'amount-income' : 'amount-expense'}">
+          ${isIncome ? '+' : '-'}${formattedAmount}
+        </td>
+      `;
+    }
 
     const rowHTML = `
       <tr>
@@ -768,19 +818,12 @@ function renderLedger() {
           </div>
         </td>
         <td>
-          <span class="badge-tag">
-            <span style="display:inline-flex; width:14px; height:14px; color:${catColor};">${catIconSvg}</span>
-            <span>${catName}</span>
-          </span>
+          ${categoryHTML}
         </td>
         <td>
-          <span class="badge-wallet" style="border-left: 3px solid ${wallet ? wallet.color : 'transparent'};">
-            ${walletName} <span style="font-size:9px; opacity:0.6; margin-left:4px;">${walletCurrency}</span>
-          </span>
+          ${walletHTML}
         </td>
-        <td class="tx-amount-cell ${isIncome ? 'amount-income' : 'amount-expense'}">
-          ${isIncome ? '+' : '-'}${formattedAmount}
-        </td>
+        ${amountHTML}
         <td>
           <div style="display:flex; gap:6px; justify-content:center;">
             <button class="btn-icon-secondary" onclick="openEditTransactionModal('${tx.id}')" title="Edit record" style="background:none; border:none; color:var(--text-muted); cursor:pointer; display:inline-flex; align-items:center; padding:4px;">
@@ -890,6 +933,7 @@ function triggerScheduleDelete(id) {
  */
 function populateDropdowns() {
   const txWallet = document.getElementById('txWallet');
+  const txToWallet = document.getElementById('txToWallet');
   const filterWallet = document.getElementById('filterWallet');
   const schedWallet = document.getElementById('schedWallet');
   
@@ -897,11 +941,13 @@ function populateDropdowns() {
   
   // Save current values if any to preserve selections during rapid loads
   const valTxW = txWallet.value;
+  const valTxToW = txToWallet ? txToWallet.value : '';
   const valFilW = filterWallet.value;
   const valSchW = schedWallet.value;
 
   // Clear options except defaults
   txWallet.innerHTML = '';
+  if (txToWallet) txToWallet.innerHTML = '';
   schedWallet.innerHTML = '';
   
   filterWallet.innerHTML = '<option value="all">All Wallets</option>';
@@ -909,12 +955,14 @@ function populateDropdowns() {
   wallets.forEach(w => {
     const opt = `<option value="${w.id}">${w.name} (${w.currency})</option>`;
     txWallet.insertAdjacentHTML('beforeend', opt);
+    if (txToWallet) txToWallet.insertAdjacentHTML('beforeend', opt);
     schedWallet.insertAdjacentHTML('beforeend', opt);
     filterWallet.insertAdjacentHTML('beforeend', `<option value="${w.id}">${w.name}</option>`);
   });
 
   // Restore values
   if (valTxW) txWallet.value = valTxW;
+  if (valTxToW && txToWallet) txToWallet.value = valTxToW;
   if (valFilW) filterWallet.value = valFilW;
   if (valSchW) schedWallet.value = valSchW;
 
@@ -940,6 +988,32 @@ function syncTransactionCategoryOptions() {
     .forEach(c => {
       select.insertAdjacentHTML('beforeend', `<option value="${c.id}">${c.name}</option>`);
     });
+}
+
+function handleTxTypeChange() {
+  const type = document.getElementById('txType').value;
+  const toWalletGroup = document.getElementById('txToWalletGroup');
+  const toWalletSelect = document.getElementById('txToWallet');
+  const categoryGroup = document.getElementById('txCategoryGroup');
+  const categorySelect = document.getElementById('txCategory');
+  const walletLabel = document.getElementById('txWalletLabel');
+  
+  if (type === 'transfer') {
+    if (walletLabel) walletLabel.innerText = 'From Wallet';
+    if (toWalletGroup) toWalletGroup.style.display = 'block';
+    if (toWalletSelect) toWalletSelect.required = true;
+    if (categoryGroup) categoryGroup.style.display = 'none';
+    if (categorySelect) categorySelect.required = false;
+  } else {
+    if (walletLabel) walletLabel.innerText = 'From Wallet';
+    if (toWalletGroup) toWalletGroup.style.display = 'none';
+    if (toWalletSelect) toWalletSelect.required = false;
+    if (categoryGroup) categoryGroup.style.display = 'block';
+    if (categorySelect) categorySelect.required = true;
+    
+    // Sync regular categories for expense/income
+    syncTransactionCategoryOptions();
+  }
 }
 
 function syncScheduleCategoryOptions() {
@@ -1038,12 +1112,14 @@ function syncCategoryFormBudgetState() {
 function submitTransactionForm(e) {
   e.preventDefault();
   
+  const type = document.getElementById('txType').value;
   const tx = {
     title: document.getElementById('txTitle').value,
     amount: Number(document.getElementById('txAmount').value),
-    type: document.getElementById('txType').value,
+    type: type,
     walletId: document.getElementById('txWallet').value,
-    categoryId: document.getElementById('txCategory').value,
+    toWalletId: type === 'transfer' ? document.getElementById('txToWallet').value : null,
+    categoryId: type === 'transfer' ? null : document.getElementById('txCategory').value,
     currency: document.getElementById('txCurrency').value,
     date: document.getElementById('txDate').value,
     note: document.getElementById('txNote').value,
@@ -1054,6 +1130,15 @@ function submitTransactionForm(e) {
   
   // Reset form and close
   document.getElementById('transactionForm').reset();
+  
+  // Reset fields to default visibility states
+  const toWalletGroup = document.getElementById('txToWalletGroup');
+  if (toWalletGroup) toWalletGroup.style.display = 'none';
+  const categoryGroup = document.getElementById('txCategoryGroup');
+  if (categoryGroup) categoryGroup.style.display = 'block';
+  const walletLabel = document.getElementById('txWalletLabel');
+  if (walletLabel) walletLabel.innerText = 'From Wallet';
+  
   closeModal('modalTransaction');
 }
 
@@ -1184,17 +1269,30 @@ function openEditTransactionModal(txId) {
   document.getElementById('editTxDate').value = tx.date;
   document.getElementById('editTxNote').value = tx.note || '';
 
-  // Populate wallets dropdown inside the edit modal
+  // Populate wallets dropdowns inside the edit modal
   const editTxWallet = document.getElementById('editTxWallet');
+  const editTxToWallet = document.getElementById('editTxToWallet');
+  
   editTxWallet.innerHTML = '';
+  if (editTxToWallet) editTxToWallet.innerHTML = '';
+  
   MidoriState.wallets.forEach(w => {
-    editTxWallet.insertAdjacentHTML('beforeend', `<option value="${w.id}">${w.name} (${w.currency})</option>`);
+    const opt = `<option value="${w.id}">${w.name} (${w.currency})</option>`;
+    editTxWallet.insertAdjacentHTML('beforeend', opt);
+    if (editTxToWallet) editTxToWallet.insertAdjacentHTML('beforeend', opt);
   });
+  
   editTxWallet.value = tx.walletId;
+  if (tx.toWalletId && editTxToWallet) {
+    editTxToWallet.value = tx.toWalletId;
+  }
 
-  // Populate category tags dropdown based on transaction type
-  syncEditTransactionCategoryOptions();
-  document.getElementById('editTxCategory').value = tx.categoryId;
+  // Adjust display and validations
+  handleEditTxTypeChange();
+  
+  if (tx.type !== 'transfer') {
+    document.getElementById('editTxCategory').value = tx.categoryId;
+  }
 
   // Sync transaction currency
   document.getElementById('editTxCurrency').value = tx.currency || (MidoriState.wallets.find(w => w.id === tx.walletId)?.currency || 'USD');
@@ -1214,6 +1312,32 @@ function syncEditTransactionCategoryOptions() {
     });
 }
 
+function handleEditTxTypeChange() {
+  const type = document.getElementById('editTxType').value;
+  const toWalletGroup = document.getElementById('editTxToWalletGroup');
+  const toWalletSelect = document.getElementById('editTxToWallet');
+  const categoryGroup = document.getElementById('editTxCategoryGroup');
+  const categorySelect = document.getElementById('editTxCategory');
+  const walletLabel = document.getElementById('editTxWalletLabel');
+  
+  if (type === 'transfer') {
+    if (walletLabel) walletLabel.innerText = 'From Wallet';
+    if (toWalletGroup) toWalletGroup.style.display = 'block';
+    if (toWalletSelect) toWalletSelect.required = true;
+    if (categoryGroup) categoryGroup.style.display = 'none';
+    if (categorySelect) categorySelect.required = false;
+  } else {
+    if (walletLabel) walletLabel.innerText = 'From Wallet';
+    if (toWalletGroup) toWalletGroup.style.display = 'none';
+    if (toWalletSelect) toWalletSelect.required = false;
+    if (categoryGroup) categoryGroup.style.display = 'block';
+    if (categorySelect) categorySelect.required = true;
+    
+    // Sync regular categories for expense/income
+    syncEditTransactionCategoryOptions();
+  }
+}
+
 function syncEditTransactionCurrencyDefault() {
   const walletId = document.getElementById('editTxWallet').value;
   const wallet = MidoriState.wallets.find(w => w.id === walletId);
@@ -1226,12 +1350,14 @@ function submitEditTransactionForm(e) {
   e.preventDefault();
 
   const id = document.getElementById('editTxId').value;
+  const type = document.getElementById('editTxType').value;
   const updatedFields = {
     title: document.getElementById('editTxTitle').value,
     amount: Number(document.getElementById('editTxAmount').value),
-    type: document.getElementById('editTxType').value,
+    type: type,
     walletId: document.getElementById('editTxWallet').value,
-    categoryId: document.getElementById('editTxCategory').value,
+    toWalletId: type === 'transfer' ? document.getElementById('editTxToWallet').value : null,
+    categoryId: type === 'transfer' ? null : document.getElementById('editTxCategory').value,
     currency: document.getElementById('editTxCurrency').value,
     date: document.getElementById('editTxDate').value,
     note: document.getElementById('editTxNote').value,
@@ -1544,28 +1670,28 @@ function submitPairingForm(e) {
 function forceSyncPush() {
   pushStateToCloud().then(success => {
     if (success) {
-      alert('Local database forced successfully to the cloud.');
+      alert('Local database exported successfully to the cloud.');
       renderAllViews();
     } else {
-      alert('Failed to upload cloud state. Please check connection.');
+      alert('Failed to export data to cloud. Please check connection.');
     }
   });
 }
 
 function forceSyncPull() {
-  if (confirm('Overwrite local state with cloud state? Unsaved local changes will be replaced. Proceed?')) {
+  if (confirm('Import data from cloud? This will overwrite your local state with the cloud state. Proceed?')) {
     const tempLastSynced = MidoriState.preferences.lastSyncedAt;
     MidoriState.updatedAt = 0; 
     
     pullStateFromCloud().then(success => {
       if (success) {
-        alert('Local ledger successfully synchronized from the cloud.');
+        alert('Data successfully imported from the cloud.');
         applyTheme(MidoriState.preferences.theme);
         document.getElementById('baseCurrencySelect').value = MidoriState.preferences.baseCurrency;
         renderAllViews();
       } else {
         MidoriState.preferences.lastSyncedAt = tempLastSynced;
-        alert('Failed to synchronize from the cloud. Please check connection.');
+        alert('Failed to import data from the cloud. Please check connection.');
       }
     });
   }

@@ -84,7 +84,7 @@ function renderTrendChart(colors, baseCurrency) {
       
       if (tx.type === 'income') {
         incomeData[mIndex] += converted;
-      } else {
+      } else if (tx.type === 'expense') {
         expenseData[mIndex] += converted;
       }
     }

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Midori — Premium Japanese-Style Finance Ledger</title>
+  <title>Midori — Leafy Ledger</title>
   <link rel="icon" type="image/png" href="image/midori.png">
   <link rel="shortcut icon" type="image/png" href="image/midori.png">
   
@@ -14,15 +14,18 @@
   <!-- Apple Web App Standalone Mode Support -->
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="Midori">
+  <meta name="apple-mobile-web-app-title" content="Midori — Leafy Ledger">
   <link rel="apple-touch-icon" href="image/midori.png">
 
   <!-- Beautiful Typography and Visual Customization -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
   <!-- Chart.js for High-Fidelity Interactive Visualizations -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
-<body>
+<body class="theme-dark">
 
   <div id="appContainer">
     <!-- Sidebar Backdrop Overlay -->
@@ -38,7 +41,7 @@
             </div>
             <div>
               <div class="brand-name">Midori</div>
-              <span style="font-size: 10px; font-weight:600; opacity:0.5; letter-spacing:1px; text-transform:uppercase;">Leafy Accounting</span>
+              <span style="font-size: 10px; font-weight:600; opacity:0.5; letter-spacing:1px; text-transform:uppercase;">Leafy Ledger</span>
             </div>
           </div>
           <button id="mobileMenuClose" class="mobile-menu-close" aria-label="Close Navigation">
@@ -112,7 +115,6 @@
           </button>
           <div class="header-title-text">
             <h1>Midori Ledger</h1>
-            <p>Elegant, multi-currency ledger with Japanese-inspired minimalist aesthetics.</p>
           </div>
         </div>
         <div class="header-controls">
@@ -306,10 +308,10 @@
            ========================================================================== -->
       <div id="tab-ledger" class="tab-content">
         <div class="section-header">
-          <h2>Ledger History</h2>
+          <h2>Transactions History</h2>
           <button class="add-btn" onclick="openModal('modalTransaction')">
             <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2.5" fill="none"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-            Record Transaction
+            Add Transaction
           </button>
         </div>
 
@@ -482,20 +484,10 @@
             </div>
 
             <div class="settings-action-row" style="flex-wrap: wrap; gap: 8px;">
-              <button class="btn-secondary" onclick="forceSyncPush()">Force Push to Cloud</button>
-              <button class="btn-secondary" onclick="forceSyncPull()">Force Pull from Cloud</button>
+              <button class="btn-secondary" onclick="forceSyncPush()">Export Data to Cloud</button>
+              <button class="btn-secondary" onclick="forceSyncPull()">Import Data From Cloud</button>
               <button class="btn-danger" style="margin-left: auto;" onclick="disableZenSync()">Disable Cloud Sync</button>
             </div>
-          </div>
-        </div>
-
-        <div class="settings-group">
-          <h3>High Fidelity Mock Data</h3>
-          <p>Instantly pre-populate your ledger with 45 days of rich, multi-currency financial mock data, categories, and active schedules to preview charts and budget alerts immediately.</p>
-          <div class="settings-action-row">
-            <button class="add-btn" onclick="loadMatchaMockData()">
-              Generate Japanese Matcha Demo Data
-            </button>
           </div>
         </div>
 
@@ -510,14 +502,6 @@
         </div>
 
         <div class="settings-group">
-          <h3>Set to Default</h3>
-          <p>Restore the app to its original factory state with default wallets, category tags, and core preferences. This will replace your current settings and data.</p>
-          <div class="settings-action-row">
-            <button class="btn-secondary" onclick="triggerDefaultReset()">Set to Default State</button>
-          </div>
-        </div>
-
-        <div class="settings-group">
           <h3>Erase Database</h3>
           <p style="color:var(--autumn-terracotta);">Warning: This action will completely erase all wallets, transactions, tags, budgets, and histories saved in LocalStorage and reset the database to a completely empty clean slate.</p>
           <div class="settings-action-row">
@@ -525,35 +509,52 @@
           </div>
         </div>
 
-        <!-- App version footer -->
-        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; margin-top: 32px; padding-top: 16px; border-top: 1px solid var(--border-color); opacity: 0.5; font-size: 11px; text-align: center; gap: 4px;">
-          <span style="font-weight: 600; color: var(--green-mint); letter-spacing: 0.5px;">MIDORI LEDGER</span>
-          <span>Version 1.2.0 (Build 2026.05.26-v10)</span>
-          <span style="font-size: 10px;">ZenSync Engine • Secure Offline-First Cryptography</span>
+        <div class="settings-group" style="border-left: 4px solid var(--green-sage);">
+          <h3>Version</h3>
+          <p>System update and release integrity verification.</p>
+          <div style="background: rgba(255,255,255,0.03); border: 1px solid var(--border-color); border-radius: 12px; padding: 16px; font-size: 13px; line-height: 1.6; display: flex; flex-direction: column; gap: 8px;">
+            <div><strong>App Name:</strong> Midori — Leafy Ledger</div>
+            <div><strong>Version:</strong> 1.3.0 (Build 2026.05.29-v11)</div>
+            <div><strong>Last Updated:</strong> May 29, 2026</div>
+            <div><strong>Sync Engine:</strong> ZenSync Local AES-GCM-256 (PWA-v11)</div>
+          </div>
         </div>
       </div>
     </main>
   </div>
 
   <!-- ==========================================================================
-       MODAL: RECORD TRANSACTION
+       MODAL: ADD TRANSACTION
        ========================================================================== -->
   <div class="modal-overlay" id="modalTransaction">
     <div class="modal-window">
       <div class="modal-header">
-        <h3>Record Transaction</h3>
+        <h3>Add Transaction</h3>
         <button class="modal-close-btn" onclick="closeModal('modalTransaction')">
           <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
         </button>
       </div>
       <form class="modal-form" id="transactionForm" onsubmit="submitTransactionForm(event)">
-        <!-- Row 1: Type & Amount -->
+        <!-- Row 1: Title -->
+        <div class="input-group">
+          <label for="txTitle">Title</label>
+          <input type="text" id="txTitle" class="form-control" placeholder="Matcha Tea, Ramen Lunch..." required>
+        </div>
+
+        <!-- Row 2: Details -->
+        <div class="input-group">
+          <label for="txNote">Details</label>
+          <input type="text" id="txNote" class="form-control" placeholder="Optional details...">
+        </div>
+
+        <!-- Row 3: Type & Amount -->
         <div class="form-row">
           <div class="input-group">
             <label for="txType">Type</label>
-            <select id="txType" class="form-control" onchange="syncTransactionCategoryOptions()" required>
+            <select id="txType" class="form-control" onchange="handleTxTypeChange()" required>
               <option value="expense">Expense</option>
               <option value="income">Income</option>
+              <option value="transfer">Transfer</option>
             </select>
           </div>
           <div class="input-group">
@@ -562,22 +563,26 @@
           </div>
         </div>
 
-        <!-- Row 2: Title Description -->
-        <div class="input-group">
-          <label for="txTitle">Title Description</label>
-          <input type="text" id="txTitle" class="form-control" placeholder="Matcha Tea, Ramen Lunch..." required>
-        </div>
-
-        <!-- Row 3: Wallet & Custom Currency Select (Multi-currency purchase) -->
+        <!-- Row 4: From Wallet & To Wallet (Conditional) -->
         <div class="form-row">
           <div class="input-group">
-            <label for="txWallet">Wallet</label>
+            <label for="txWallet" id="txWalletLabel">From Wallet</label>
             <select id="txWallet" class="form-control" onchange="syncTransactionCurrencyDefault()" required>
               <!-- Loaded dynamically -->
             </select>
           </div>
+          <div class="input-group" id="txToWalletGroup" style="display: none;">
+            <label for="txToWallet">To Wallet</label>
+            <select id="txToWallet" class="form-control">
+              <!-- Loaded dynamically -->
+            </select>
+          </div>
+        </div>
+
+        <!-- Row 5: Currency & Transaction Date -->
+        <div class="form-row">
           <div class="input-group">
-            <label for="txCurrency">Tx Currency</label>
+            <label for="txCurrency">Currency</label>
             <select id="txCurrency" class="form-control" required>
               <option value="JPY">JPY (¥)</option>
               <option value="USD">USD ($)</option>
@@ -586,29 +591,21 @@
               <option value="CNY">CNY (¥)</option>
             </select>
           </div>
-        </div>
-
-        <!-- Row 4: Category Tag & Transaction Date -->
-        <div class="form-row">
-          <div class="input-group">
-            <label for="txCategory">Category Tag</label>
-            <select id="txCategory" class="form-control" required>
-              <!-- Loaded dynamically -->
-            </select>
-          </div>
           <div class="input-group">
             <label for="txDate">Transaction Date</label>
             <input type="date" id="txDate" class="form-control" required>
           </div>
         </div>
 
-        <!-- Row 5: Short Note -->
-        <div class="input-group">
-          <label for="txNote">Short Note</label>
-          <input type="text" id="txNote" class="form-control" placeholder="Optional details...">
+        <!-- Row 6: Category Tag (Conditional) -->
+        <div class="input-group" id="txCategoryGroup">
+          <label for="txCategory">Category Tag</label>
+          <select id="txCategory" class="form-control" required>
+            <!-- Loaded dynamically -->
+          </select>
         </div>
 
-        <button type="submit" class="form-submit-btn">Save Ledger Entry</button>
+        <button type="submit" class="form-submit-btn" style="margin-top: 16px;">Save Ledger Entry</button>
       </form>
     </div>
   </div>
@@ -979,13 +976,26 @@
       </div>
       <form class="modal-form" id="editTransactionForm" onsubmit="submitEditTransactionForm(event)">
         <input type="hidden" id="editTxId">
-        <!-- Row 1: Type & Amount -->
+        <!-- Row 1: Title -->
+        <div class="input-group">
+          <label for="editTxTitle">Title</label>
+          <input type="text" id="editTxTitle" class="form-control" placeholder="Matcha Tea, Ramen Lunch..." required>
+        </div>
+
+        <!-- Row 2: Details -->
+        <div class="input-group">
+          <label for="editTxNote">Details</label>
+          <input type="text" id="editTxNote" class="form-control" placeholder="Optional details...">
+        </div>
+
+        <!-- Row 3: Type & Amount -->
         <div class="form-row">
           <div class="input-group">
             <label for="editTxType">Type</label>
-            <select id="editTxType" class="form-control" onchange="syncEditTransactionCategoryOptions()" required>
+            <select id="editTxType" class="form-control" onchange="handleEditTxTypeChange()" required>
               <option value="expense">Expense</option>
               <option value="income">Income</option>
+              <option value="transfer">Transfer</option>
             </select>
           </div>
           <div class="input-group">
@@ -994,22 +1004,26 @@
           </div>
         </div>
 
-        <!-- Row 2: Title Description -->
-        <div class="input-group">
-          <label for="editTxTitle">Title Description</label>
-          <input type="text" id="editTxTitle" class="form-control" placeholder="Matcha Tea, Ramen Lunch..." required>
-        </div>
-
-        <!-- Row 3: Wallet & Custom Currency Select (Multi-currency purchase) -->
+        <!-- Row 4: From Wallet & To Wallet (Conditional) -->
         <div class="form-row">
           <div class="input-group">
-            <label for="editTxWallet">Wallet</label>
+            <label for="editTxWallet" id="editTxWalletLabel">From Wallet</label>
             <select id="editTxWallet" class="form-control" onchange="syncEditTransactionCurrencyDefault()" required>
               <!-- Loaded dynamically -->
             </select>
           </div>
+          <div class="input-group" id="editTxToWalletGroup" style="display: none;">
+            <label for="editTxToWallet">To Wallet</label>
+            <select id="editTxToWallet" class="form-control">
+              <!-- Loaded dynamically -->
+            </select>
+          </div>
+        </div>
+
+        <!-- Row 5: Currency & Transaction Date -->
+        <div class="form-row">
           <div class="input-group">
-            <label for="editTxCurrency">Tx Currency</label>
+            <label for="editTxCurrency">Currency</label>
             <select id="editTxCurrency" class="form-control" required>
               <option value="JPY">JPY (¥)</option>
               <option value="USD">USD ($)</option>
@@ -1018,29 +1032,21 @@
               <option value="CNY">CNY (¥)</option>
             </select>
           </div>
-        </div>
-
-        <!-- Row 4: Category Tag & Transaction Date -->
-        <div class="form-row">
-          <div class="input-group">
-            <label for="editTxCategory">Category Tag</label>
-            <select id="editTxCategory" class="form-control" required>
-              <!-- Loaded dynamically -->
-            </select>
-          </div>
           <div class="input-group">
             <label for="editTxDate">Transaction Date</label>
             <input type="date" id="editTxDate" class="form-control" required>
           </div>
         </div>
 
-        <!-- Row 5: Short Note -->
-        <div class="input-group">
-          <label for="editTxNote">Short Note</label>
-          <input type="text" id="editTxNote" class="form-control" placeholder="Optional details...">
+        <!-- Row 6: Category Tag (Conditional) -->
+        <div class="input-group" id="editTxCategoryGroup">
+          <label for="editTxCategory">Category Tag</label>
+          <select id="editTxCategory" class="form-control" required>
+            <!-- Loaded dynamically -->
+          </select>
         </div>
 
-        <button type="submit" class="form-submit-btn">Save Transaction Changes</button>
+        <button type="submit" class="form-submit-btn" style="margin-top: 16px;">Save Transaction Changes</button>
       </form>
     </div>
   </div>
