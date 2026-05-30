@@ -51,7 +51,7 @@
       repeatCount="indefinite" 
       calcMode="spline" 
       keyTimes="0; 0.5; 1" 
-      keySplines="0.4, 0, 0.2, 1; 0.4, 0, 0.2, 1" />
+      keySplines="0.4, 0, 0.2, 1; 0.4, 0, 0.2, 1" additive="sum" />
       
     <g>
       <animateTransform 
@@ -64,7 +64,7 @@
         keyTimes="0; 0.5; 1" 
         keySplines="0.4, 0, 0.2, 1; 0.4, 0, 0.2, 1" />
 
-      <!-- stylized premium leaf path -->
+      <!-- Stylized premium leaf path -->
       <path d="M 0,-40 
                C 25,-20 35,10 0,40 
                C -35,10 -25,-20 0,-40 Z" 
@@ -88,41 +88,41 @@
     </g>
   </g>
 
-  <!-- 3. Floating, 3D-Spinning Gold Coin (Finance symbol) -->
+  <!-- 3. Floating, 3D-Spinning Gold Coin (Centered orbit nesting for browser compatibility) -->
   <g transform="translate(100, 100)">
-    <!-- Orbits around the leaf in an elliptical motion -->
-    <animateTransform 
-      attributeName="transform" 
-      type="translate" 
-      values="100,60; 140,100; 100,140; 60,100; 100,60" 
-      dur="8s" 
-      repeatCount="indefinite" 
-      calcMode="spline" 
-      keyTimes="0; 0.25; 0.5; 0.75; 1" 
-      keySplines="0.4, 0, 0.2, 1; 0.4, 0, 0.2, 1; 0.4, 0, 0.2, 1; 0.4, 0, 0.2, 1" />
-      
-    <!-- Coin container (for 3D scaling effect and scaling transition) -->
-    <g transform="scale(0.8)">
-      <!-- 3D spin effect (horizontal scale from 1 to -1 to 1) -->
+    <!-- Orbits around the leaf in an elliptical motion relative to centered origin -->
+    <g>
       <animateTransform 
         attributeName="transform" 
-        type="scale" 
-        values="0.8,0.8; 0.05,0.8; 0.8,0.8; 0.05,0.8; 0.8,0.8" 
-        type-modifier="x"
-        dur="2.5s" 
+        type="translate" 
+        values="0,-40; 40,0; 0,40; -40,0; 0,-40" 
+        dur="8s" 
         repeatCount="indefinite" 
-        calcMode="spline"
-        keyTimes="0; 0.25; 0.5; 0.75; 1"
+        calcMode="spline" 
+        keyTimes="0; 0.25; 0.5; 0.75; 1" 
         keySplines="0.4, 0, 0.2, 1; 0.4, 0, 0.2, 1; 0.4, 0, 0.2, 1; 0.4, 0, 0.2, 1" />
+        
+      <!-- Coin container handles 3D scale cycle (X-scale goes negative for true 360° rotation) -->
+      <g>
+        <animateTransform 
+          attributeName="transform" 
+          type="scale" 
+          values="0.8 0.8; 0.05 0.8; -0.8 0.8; 0.05 0.8; 0.8 0.8" 
+          dur="2.5s" 
+          repeatCount="indefinite" 
+          calcMode="spline"
+          keyTimes="0; 0.25; 0.5; 0.75; 1"
+          keySplines="0.4, 0, 0.2, 1; 0.4, 0, 0.2, 1; 0.4, 0, 0.2, 1; 0.4, 0, 0.2, 1" />
 
-      <!-- The Gold Coin -->
-      <circle cx="0" cy="0" r="16" fill="url(#goldGrad)" stroke="#FBBF24" stroke-width="1" filter="url(#glow)" />
-      
-      <!-- Inner coin border -->
-      <circle cx="0" cy="0" r="12" fill="none" stroke="#F59E0B" stroke-width="0.8" stroke-dasharray="2,2" />
-      
-      <!-- Central Square Hole (Traditional Japanese/Chinese Coin) -->
-      <rect x="-4" y="-4" width="8" height="8" fill="#101615" rx="1" />
+        <!-- The Gold Coin -->
+        <circle cx="0" cy="0" r="16" fill="url(#goldGrad)" stroke="#FBBF24" stroke-width="1" filter="url(#glow)" />
+        
+        <!-- Inner coin border -->
+        <circle cx="0" cy="0" r="12" fill="none" stroke="#F59E0B" stroke-width="0.8" stroke-dasharray="2,2" />
+        
+        <!-- Central Square Hole (Traditional Japanese/Chinese Coin) -->
+        <rect x="-4" y="-4" width="8" height="8" fill="#101615" rx="1" />
+      </g>
     </g>
   </g>
 

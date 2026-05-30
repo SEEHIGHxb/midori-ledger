@@ -6,6 +6,22 @@
       <stop offset="100%" stop-color="#101615" />
     </radialGradient>
 
+    <!-- Stage Suspended Ground Gradients (Lead Designer Refinement) -->
+    <linearGradient id="platformGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#059669" stop-opacity="0" />
+      <stop offset="15%" stop-color="#059669" stop-opacity="0.3" />
+      <stop offset="50%" stop-color="#10B981" stop-opacity="0.8" />
+      <stop offset="85%" stop-color="#059669" stop-opacity="0.3" />
+      <stop offset="100%" stop-color="#059669" stop-opacity="0" />
+    </linearGradient>
+    <linearGradient id="platformBase" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#1f2e2a" stop-opacity="0" />
+      <stop offset="20%" stop-color="#1f2e2a" stop-opacity="0.6" />
+      <stop offset="50%" stop-color="#1f2e2a" stop-opacity="1" />
+      <stop offset="80%" stop-color="#1f2e2a" stop-opacity="0.6" />
+      <stop offset="100%" stop-color="#1f2e2a" stop-opacity="0" />
+    </linearGradient>
+
     <!-- Financial Bar Gradients -->
     <linearGradient id="barGrad1" x1="0%" y1="100%" x2="0%" y2="0%">
       <stop offset="0%" stop-color="#045a43" />
@@ -72,33 +88,36 @@
   <!-- Deep Velvet Charcoal Canvas -->
   <rect width="100%" height="100%" fill="url(#bgGlow)" />
 
-  <!-- Ambient Light Rays (Atmospheric Background) -->
-  <g opacity="0.15" filter="url(#softGlow)">
+  <!-- Ambient Light Rays (Atmospheric Background with Komorebi Shimmer) -->
+  <g opacity="0.12" filter="url(#softGlow)">
+    <animate attributeName="opacity" values="0.08; 0.18; 0.08" dur="8s" repeatCount="indefinite" />
     <path d="M-100 -100 L300 650 L200 650 Z" fill="#10B981" />
     <path d="M400 -100 L750 650 L600 650 Z" fill="#34D399" />
   </g>
 
-  <!-- Ground Minimalist Platform -->
+  <!-- Ground Minimalist Platform (Lead Designer Gradient Tapering) -->
   <g filter="url(#dropShadow)">
-    <line x1="150" y1="450" x2="650" y2="450" stroke="#1f2e2a" stroke-width="6" stroke-linecap="round" />
-    <line x1="180" y1="450" x2="620" y2="450" stroke="#059669" stroke-width="2" stroke-linecap="round" opacity="0.3" />
+    <line x1="150" y1="450" x2="650" y2="450" stroke="url(#platformBase)" stroke-width="6" stroke-linecap="round" />
+    <line x1="180" y1="450" x2="620" y2="450" stroke="url(#platformGrad)" stroke-width="2" stroke-linecap="round" />
   </g>
 
   <!-- ==================== BACKGROUND FLOATING LEAVES ==================== -->
-  <!-- Fluttering Leaf 1 (Left) -->
+  <!-- Fluttering Leaf 1 (Left - Separate transform nesting for browser safety) -->
   <g>
-    <path d="M 0 0 C -10 -5 -15 5 -10 12 C -5 15 5 10 0 0 Z" fill="#047857" opacity="0.6" transform="scale(1.2)">
-      <animateMotion path="M 120 -50 C 90 100, 220 220, 100 350 S 200 480, 80 650" dur="14s" repeatCount="indefinite" rotate="auto" />
-      <animateTransform attributeName="transform" type="rotate" values="0; 360" dur="7s" repeatCount="indefinite" additive="sum" />
-    </path>
+    <animateMotion path="M 120 -50 C 90 100, 220 220, 100 350 S 200 480, 80 650" dur="14s" repeatCount="indefinite" rotate="auto" />
+    <g>
+      <animateTransform attributeName="transform" type="rotate" values="0; 360" dur="7s" repeatCount="indefinite" />
+      <path d="M 0 0 C -10 -5 -15 5 -10 12 C -5 15 5 10 0 0 Z" fill="#047857" opacity="0.6" transform="scale(1.2)" />
+    </g>
   </g>
 
-  <!-- Fluttering Leaf 2 (Right) -->
+  <!-- Fluttering Leaf 2 (Right - Separate transform nesting for browser safety) -->
   <g>
-    <path d="M 0 0 C 12 -5 18 5 12 12 C 5 15 -5 10 0 0 Z" fill="#10B981" opacity="0.4" transform="scale(0.9)">
-      <animateMotion path="M 680 -50 C 720 120, 580 260, 680 390 S 550 500, 640 650" dur="12s" repeatCount="indefinite" rotate="auto" />
-      <animateTransform attributeName="transform" type="rotate" values="360; 0" dur="6s" repeatCount="indefinite" additive="sum" />
-    </path>
+    <animateMotion path="M 680 -50 C 720 120, 580 260, 680 390 S 550 500, 640 650" dur="12s" repeatCount="indefinite" rotate="auto" />
+    <g>
+      <animateTransform attributeName="transform" type="rotate" values="360; 0" dur="6s" repeatCount="indefinite" />
+      <path d="M 0 0 C 12 -5 18 5 12 12 C 5 15 -5 10 0 0 Z" fill="#10B981" opacity="0.4" transform="scale(0.9)" />
+    </g>
   </g>
 
 
@@ -122,29 +141,46 @@
   </rect>
 
 
-  <!-- ==================== ORGANIC SPROUT (MORPHEUS FLOWERING) ==================== -->
-  <!-- Sprout coordinates anchored relative to Top Center of Bar 3 (457.5, 210) -->
+  <!-- ==================== ORGANIC SPROUT (FLOWERING & ELASTIC IMPACT) ==================== -->
+  <!-- Anchored relative to top center of Bar 3 (457.5, 210) -->
   <g transform="translate(457.5, 210)">
-    <!-- Scale growth animation centered at anchor (0, 0) -->
     <g>
+      <!-- Germination Growth scale -->
       <animateTransform attributeName="transform" type="scale" from="0 0" to="1 1" dur="1.2s" begin="1.6s" fill="freeze" calcMode="spline" keyTimes="0;1" keySplines="0.175, 0.885, 0.32, 1.275" />
+      
+      <!-- Reactive Squash & Wobble on Coin Impact (Lead Designer Refinement) -->
+      <animateTransform attributeName="transform" type="scale"
+        values="1 1; 1 0.75; 1 1.10; 1 0.92; 1 1.03; 1 1"
+        keyTimes="0; 0.15; 0.35; 0.55; 0.75; 1"
+        dur="1.2s" begin="3.3s" fill="freeze"
+        additive="sum" calcMode="spline"
+        keySplines="0.33, 1, 0.68, 1; 0.33, 1, 0.68, 1; 0.33, 1, 0.68, 1; 0.33, 1, 0.68, 1; 0.33, 1, 0.68, 1" />
 
       <!-- Curved Tender Stem -->
       <path d="M 0 0 C 4 -15 -2 -35 -4 -48" stroke="url(#stemGrad)" stroke-width="4.5" stroke-linecap="round" fill="none" />
 
-      <!-- Left Leaf (Growing & Tilting) -->
+      <!-- Left Leaf (Growing & Swaying) -->
       <g transform="translate(-2, -28)">
         <g>
-          <animateTransform attributeName="transform" type="rotate" values="-40; -15; -40" dur="6s" begin="2.8s" repeatCount="indefinite" calcMode="spline" keyTimes="0; 0.5; 1" keySplines="0.445, 0.05, 0.55, 0.95; 0.445, 0.05, 0.55, 0.95" />
-          <path d="M 0 0 C -12 -12 -26 -12 -28 2 C -24 14 -8 8 0 0 Z" fill="url(#leafGrad)" filter="url(#softGlow)" />
+          <!-- Left leaf scales in at 1.6s -->
+          <animateTransform attributeName="transform" type="scale" from="0 0" to="1 1" dur="0.9s" begin="1.6s" fill="freeze" calcMode="spline" keyTimes="0;1" keySplines="0.175, 0.885, 0.32, 1.15" />
+          <g>
+            <animateTransform attributeName="transform" type="rotate" values="-40; -15; -40" dur="6s" begin="2.5s" repeatCount="indefinite" calcMode="spline" keyTimes="0; 0.5; 1" keySplines="0.445, 0.05, 0.55, 0.95; 0.445, 0.05, 0.55, 0.95" />
+            <path d="M 0 0 C -12 -12 -26 -12 -28 2 C -24 14 -8 8 0 0 Z" fill="url(#leafGrad)" filter="url(#softGlow)" />
+          </g>
         </g>
       </g>
 
-      <!-- Right Leaf (Growing & Tilting) -->
+      <!-- Right Leaf (Staggered Growing & Asymmetric Swaying - Lead Designer Timing) -->
       <g transform="translate(-3, -38)">
         <g>
-          <animateTransform attributeName="transform" type="rotate" values="40; 20; 40" dur="6s" begin="2.8s" repeatCount="indefinite" calcMode="spline" keyTimes="0; 0.5; 1" keySplines="0.445, 0.05, 0.55, 0.95; 0.445, 0.05, 0.55, 0.95" />
-          <path d="M 0 0 C 14 -12 28 -8 26 6 C 20 16 6 8 0 0 Z" fill="url(#leafGrad)" filter="url(#softGlow)" />
+          <!-- Staggered Right Leaf scale-in by 180ms (starts at 1.78s) -->
+          <animateTransform attributeName="transform" type="scale" from="0 0" to="1 1" dur="0.9s" begin="1.78s" fill="freeze" calcMode="spline" keyTimes="0;1" keySplines="0.175, 0.885, 0.32, 1.15" />
+          <g>
+            <!-- Offset sway angles (+40 to +20) and duration (6.5s) to break uniform mechanical sync -->
+            <animateTransform attributeName="transform" type="rotate" values="40; 20; 40" dur="6.5s" begin="2.68s" repeatCount="indefinite" calcMode="spline" keyTimes="0; 0.5; 1" keySplines="0.445, 0.05, 0.55, 0.95; 0.445, 0.05, 0.55, 0.95" />
+            <path d="M 0 0 C 14 -12 28 -8 26 6 C 20 16 6 8 0 0 Z" fill="url(#leafGrad)" filter="url(#softGlow)" />
+          </g>
         </g>
       </g>
 
@@ -154,10 +190,10 @@
   </g>
 
 
-  <!-- ==================== 3D GOLDEN COIN (FALLING & BOUNCING) ==================== -->
-  <!-- Outer group manages gravity fall, elastic bounce on sprout, and subsequent loop float -->
+  <!-- ==================== 3D GOLDEN COIN (FALLING, BOUNCING, & WOBBLING) ==================== -->
+  <!-- Outer group manages gravity translate, bounce, and rotational Z-axis wobble -->
   <g>
-    <!-- Drop & Elastic Sprout Impact (Impact lands at ~3.2s) -->
+    <!-- Drop & Elastic Sprout Impact translate path (Impact lands at ~3.29s) -->
     <animateTransform attributeName="transform" type="translate" 
       values="457.5 -100; 457.5 125; 457.5 90; 457.5 125; 457.5 115; 457.5 120" 
       keyTimes="0; 0.55; 0.72; 0.85; 0.93; 1"
@@ -165,7 +201,15 @@
       calcMode="spline"
       dur="1.8s" begin="2.3s" fill="freeze" />
 
-    <!-- Idle Gentle Float (Triggered after coin settles, begin = 4.1s) -->
+    <!-- Dynamic Z-Axis Momentum Wobble (Lead Designer Physics Refinement) -->
+    <animateTransform attributeName="transform" type="rotate"
+      values="0; -12; 18; -10; 6; -3; 0"
+      keyTimes="0; 0.55; 0.72; 0.85; 0.93; 0.97; 1"
+      keySplines="0.4, 0, 0.2, 1; 0.33, 1, 0.68, 1; 0.33, 1, 0.68, 1; 0.33, 1, 0.68, 1; 0.33, 1, 0.68, 1; 0.33, 1, 0.68, 1"
+      calcMode="spline"
+      dur="1.8s" begin="2.3s" fill="freeze" additive="sum" />
+
+    <!-- Idle Gentle Float (Continuous hover triggered after coin settles) -->
     <g>
       <animateTransform attributeName="transform" type="translate" 
         values="0 0; 0 -8; 0 0" 
